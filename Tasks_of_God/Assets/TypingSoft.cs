@@ -6,9 +6,9 @@ using UnityEngine.UI;
 public class TypingSoft : MonoBehaviour
 {
     //　問題の日本語文
-	private string[] qJ  = {"問題", "テスト", "タイピング","神"};
+	private string[] qJ  = {"問題", "テスト", "タイピング","神","ゲーム","作業","進歩","締め切り"};
 	//　問題のローマ字文
-	private string[] qR = {"monndai", "tesuto", "taipinngu","kami"};
+	private string[] qR = {"monndai", "tesuto", "taipinngu","kami","ga-mu","sagyou","sinnpo","simekiri"};
 	//　日本語表示テキスト
 	private Text UIJ;
 	//　ローマ字表示テキスト
@@ -146,7 +146,7 @@ public class TypingSoft : MonoBehaviour
     //　正解率の計算処理
     void CorrectAnswerRate() {
         //　正解率の計算
-        correctAR = 100f * correctN / (correctN + mistakeN);
+        correctAR = 100 - mistakeN;
         //　小数点以下の桁を合わせる
         UIcorrectAR.text = correctAR.ToString("0.00");
         Debug.Log("正解率計算");
