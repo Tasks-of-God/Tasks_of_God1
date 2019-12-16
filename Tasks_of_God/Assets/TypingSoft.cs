@@ -37,15 +37,46 @@ public class TypingSoft : MonoBehaviour
     private float correctAR;
     //　正解率表示用テキストUI
     private Text UIcorrectAR;
+
+    //　トータル制限時間
+	private float totalTime;
+    //　制限時間（分）
+	[SerializeField]
+	private int hour;
+	//　制限時間（分）
+	[SerializeField]
+	private int minute;
+	//　制限時間（秒）
+	[SerializeField]
+	private float seconds;
+	//　前回Update時の秒数
+	private float oldSeconds;
+
+    private Text timeText;
+
+    private float progress = 0;
+    private Image progressBar;
+
+    private float bug = 100;
+    private Image bugBar;
+
+    private float HP = 1000;
+    private Image HPBar;
+
  
  
 	void Start () {
+
+
 		//　テキストUIを取得
-		UIJ = transform.Find("InputPanel/QuestionJ").GetComponent<Text>();
-		UIR = transform.Find("InputPanel/QuestionR").GetComponent<Text>();
-	    UIcorrectA = transform.Find("DataPanel/Correct Answer").GetComponent<Text>();
-        UIcorrectAR = transform.Find("DataPanel/Correct Answer Rate").GetComponent<Text>();
- 
+		UIJ = GameObject.Find("QuestionJ").GetComponent<Text>();
+		UIR = GameObject.Find("QuestionR").GetComponent<Text>();
+	    UIcorrectA = GameObject.Find("Correct Answer").GetComponent<Text>();
+        UIcorrectAR = GameObject.Find("Correct Answer Rate").GetComponent<Text>();
+        timeText = GameObject.Find("TimeText").GetComponent<Text>();
+        progressBar = GameObject.Find("ProgressBar").GetComponent<Image>();
+        bugBar = GameObject.Find("BugBar").GetComponent<Image>();
+        HPBar = GameObject.Find("HPBar").GetComponent<Image>();
         //　データ初期化処理
         correctAR = 0;
         UIcorrectAR.text = correctAR.ToString();
@@ -63,13 +94,21 @@ public class TypingSoft : MonoBehaviour
         correctN = 0;
         UIcorrectA.text = correctN.ToString();
 
-        UImistake = transform.Find("DataPanel/Mistake").GetComponent<Text>();
+        UImistake = transform.Find("BackPanel/DataPanel/Mistake").GetComponent<Text>();
  
         mistakeN = 0;
         UImistake.text = mistakeN.ToString();
 
         //　問題出力メソッドを呼ぶ
 	    OutputQ();
+
+        // StartCoroutine ("Logging");
+
+        hour = 2;
+        minute = 00;
+        seconds = 00;
+        totalTime = hour * 3600 + minute * 60 + seconds;
+		oldSeconds = 0f;
     }
 	
 
@@ -103,6 +142,9 @@ public class TypingSoft : MonoBehaviour
                 Mistake();
             }
         }
+
+        CountDown();
+        showBar();
     }
 
     //　タイピング正解時の処理
@@ -127,6 +169,9 @@ public class TypingSoft : MonoBehaviour
             OutputQ();
         }
         Debug.Log("正解");
+
+        progress += 1;
+        progressBar.fillAmount = progress/100;
     }
 
     //　タイピング失敗時の処理
@@ -141,6 +186,12 @@ public class TypingSoft : MonoBehaviour
         //　失敗した文字を表示
         // UII.text = correctString + "<color=#ff0000ff>" + Input.inputString + "</color>";
         Debug.Log("失敗");
+
+        HP -= 1;
+        HPBar.fillAmount = HP/1000;
+
+        bug -= 1;
+        bugBar.fillAmount = bug/100;
     }
 
     //　正解率の計算処理
@@ -151,5 +202,51 @@ public class TypingSoft : MonoBehaviour
         UIcorrectAR.text = correctAR.ToString("0.00");
         Debug.Log("正解率計算");
     }
+
+    void CountDown(){
+        //　制限時間が0秒以下なら何もしない
+		if (totalTime <= 0f) {
+			return;
+		}
+		//　一旦トータルの制限時間を計測；
+		totalTime = hour * 3600 + minute * 60 + seconds;
+		totalTime -= Time.deltaTime * 12;
+        Debug.Log(totalTime);
+        HP -= Time.deltaTime;
+ 
+		//　再設定
+        hour = (int) totalTime / 3600;
+        Debug.Log("hour: " + hour);
+		minute = (int) ((int)(totalTime- hour * 3600) / 60) ;
+        Debug.Log("minute: " + minute);
+		seconds = totalTime - hour * 3600 - minute * 60;
+        Debug.Log("seconds: " + seconds);
+		//　タイマー表示用UIテキストに時間を表示する
+		if((int)seconds != (int)oldSeconds) {
+			timeText.text = "納期まであと... " + hour.ToString("00") + ":" + minute.ToString("00") + ":" + ((int) seconds).ToString("00");
+            string testText = hour.ToString("00") + ":"  + minute.ToString("00") + ":" + ((int) seconds).ToString("00");
+            Debug.Log(testText);
+		}
+		oldSeconds = seconds;
+		//　制限時間以下になったらコンソールに『制限時間終了』という文字列を表示する
+		if(totalTime <= 0f) {
+			Debug.Log("制限時間終了");
+		}
+        
+        
+    }
+
+    void showBar(){
+        progressBar.fillAmount = progress/100;
+        bugBar.fillAmount = bug/100;
+        HPBar.fillAmount = HP/1000;
+    }
+
+    // IEnumerator Logging(){
+    //     while (true) {
+    //         // yield return new WaitForSeconds (0.5f);
+    //         // Debug.LogFormat ("{0}秒経過", 0.5f);
+    //     }
+    // }
 
 }
