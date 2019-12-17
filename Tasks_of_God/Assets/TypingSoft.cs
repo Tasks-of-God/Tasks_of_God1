@@ -57,11 +57,13 @@ public class TypingSoft : MonoBehaviour
     private float progress = 0;
     private Image progressBar;
 
-    private float bug = 100;
+    private float bug = 0;
     private Image bugBar;
 
     private float HP = 1000;
     private Image HPBar;
+
+    private string mode;
 
  
  
@@ -109,6 +111,8 @@ public class TypingSoft : MonoBehaviour
         seconds = 00;
         totalTime = hour * 3600 + minute * 60 + seconds;
 		oldSeconds = 0f;
+
+        mode = "work";
     }
 	
 
@@ -145,6 +149,12 @@ public class TypingSoft : MonoBehaviour
 
         CountDown();
         showBar();
+
+        if(bug > 20){
+            mode = "debug";
+        }else if(bug == 0 && mode == "debug"){
+            mode = "work";
+        }
     }
 
     //　タイピング正解時の処理
@@ -170,7 +180,11 @@ public class TypingSoft : MonoBehaviour
         }
         Debug.Log("正解");
 
-        progress += 1;
+        if(mode == "work"){
+            progress += 1;
+        }else if(mode == "debug"){
+            bug -= 1;
+        }
         progressBar.fillAmount = progress/100;
     }
 
@@ -190,7 +204,7 @@ public class TypingSoft : MonoBehaviour
         HP -= 1;
         HPBar.fillAmount = HP/1000;
 
-        bug -= 1;
+        bug += 1;
         bugBar.fillAmount = bug/100;
     }
 

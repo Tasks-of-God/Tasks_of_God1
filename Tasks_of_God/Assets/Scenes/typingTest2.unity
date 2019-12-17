@@ -742,7 +742,7 @@ GameObject:
   - component: {fileID: 594687433}
   - component: {fileID: 594687432}
   m_Layer: 5
-  m_Name: Image
+  m_Name: keybord_image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -786,7 +786,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2210ff8a1c624314f8d2177a28dda108, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1a33e3fbe684d41aea2ce1f4b25f157b, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
