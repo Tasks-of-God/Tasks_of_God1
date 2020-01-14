@@ -41,7 +41,7 @@ public class TypingSoft : MonoBehaviour
 
     private Text timeText;
 
-    private float progress = 90;
+    private float progress = 0;
     private Image progressBar;
 
     private float bug = 0;
@@ -77,11 +77,6 @@ public class TypingSoft : MonoBehaviour
 		nQR = qR[num];
 		UIJ.text = nQJ;
 		UIR.text = nQR;
-
-
-
-
- 
 
 
 
@@ -142,6 +137,9 @@ public class TypingSoft : MonoBehaviour
 
         if(progress >= 100)
             SceneManager.LoadScene("ClearScene");
+
+        if(HP <= 0)
+            SceneManager.LoadScene("GameOverScene");
     }
 
     //　タイピング正解時の処理
@@ -152,7 +150,7 @@ public class TypingSoft : MonoBehaviour
         
         //　次の文字を指す
         index++;
-        UIR.text =  "<color=#9a9a9a>" + correctString + "</color>" + nQR.Substring(index);
+        UIR.text =  "<color=#313131>" + correctString + "</color>" + nQR.Substring(index);
         //　問題を入力し終えたら次の問題を表示
         if(index >= nQR.Length) {
             // UII.text = "";
