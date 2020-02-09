@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class StartSceneControler : MonoBehaviour
 {
-    string gameSceneName = "typingTest2";
+    string gameSceneName = "Miyu";
 
     // Start is called before the first frame update
     void Start()

@@ -43,28 +43,36 @@ public class TypingSoft : MonoBehaviour
 
     private float progress = 0;
     private Image progressBar;
+    private int Max_prog = 50;
 
     private float bug = 0;
     private Image bugBar;
+    private int Max_bug = 100;
 
-    private float HP = 1000;
+    private float HP = 500;
     private Image HPBar;
+    private int Max_HP = 500;
+
 
     private string mode;
+
+    private int life = 3;
+    private Image life_1;
+    private Image life_2;
 
  
  
 	void Start () {
-
+        
 
 		//　テキストUIを取得
 		UIJ = GameObject.Find("QuestionJ").GetComponent<Text>();
 		UIR = GameObject.Find("QuestionR").GetComponent<Text>();
 
         timeText = GameObject.Find("TimeText").GetComponent<Text>();
-        progressBar = GameObject.Find("ProgressBar").GetComponent<Image>();
-        bugBar = GameObject.Find("BugBar").GetComponent<Image>();
-        HPBar = GameObject.Find("HPBar").GetComponent<Image>();
+        progressBar = GameObject.Find("progressBar").GetComponent<Image>();
+        bugBar = GameObject.Find("bugBar").GetComponent<Image>();
+        HPBar = GameObject.Find("hpBar").GetComponent<Image>();
         //　データ初期化処理
 
 
@@ -92,6 +100,12 @@ public class TypingSoft : MonoBehaviour
 		oldSeconds = 0f;
 
         mode = "work";
+
+        life_1 = GameObject.Find("Life_1").GetComponent<Image>();
+        life_2 = GameObject.Find("Life_2").GetComponent<Image>();
+
+        life_1.gameObject.SetActive(false);
+        life_2.gameObject.SetActive(false);
     }
 	
 
@@ -129,7 +143,7 @@ public class TypingSoft : MonoBehaviour
         CountDown();
         showBar();
 
-        if(bug > 20){
+        if(bug >= Max_bug){
             mode = "debug";
         }else if(bug == 0 && mode == "debug"){
             mode = "work";
@@ -138,8 +152,18 @@ public class TypingSoft : MonoBehaviour
         if(progress >= 100)
             SceneManager.LoadScene("ClearScene");
 
-        if(HP <= 0)
-            SceneManager.LoadScene("GameOverScene");
+        if(HP <= 0){
+            life -= 1;
+            if(life == 2){
+                life_1.gameObject.SetActive(true);
+            }else if(life == 1){
+                life_2.gameObject.SetActive(true);
+            }else{
+                SceneManager.LoadScene("GameOverScene");
+            }
+            HP = Max_HP;
+        }
+
     }
 
     //　タイピング正解時の処理
@@ -153,28 +177,30 @@ public class TypingSoft : MonoBehaviour
         UIR.text =  "<color=#313131>" + correctString + "</color>" + nQR.Substring(index);
         //　問題を入力し終えたら次の問題を表示
         if(index >= nQR.Length) {
-            // UII.text = "";
+            if(mode == "work"){
+                progress += 1;
+            }else if(mode == "debug"){
+                bug -= (float)Max_bug*0.2f;
+                if(bug > Max_bug) bug = Max_bug;
+            }
+            progressBar.fillAmount = 1-(progress/Max_prog);
+
             correctString = "";
             index = 0;
             OutputQ();
         }
         Debug.Log("正解");
 
-        if(mode == "work"){
-            progress += 1;
-        }else if(mode == "debug"){
-            bug -= 1;
-        }
-        progressBar.fillAmount = progress/100;
+
     }
 
     //　タイピング失敗時の処理
     void Mistake() {
         HP -= 1;
-        HPBar.fillAmount = HP/1000;
+        HPBar.fillAmount = 1 - (HP/Max_HP);
 
         bug += 1;
-        bugBar.fillAmount = bug/100;
+        bugBar.fillAmount = 1-(bug/Max_bug);
     }
 
     //　正解率の計算処理
@@ -216,9 +242,9 @@ public class TypingSoft : MonoBehaviour
     }
 
     void showBar(){
-        progressBar.fillAmount = progress/100;
-        bugBar.fillAmount = bug/100;
-        HPBar.fillAmount = HP/1000;
+        progressBar.fillAmount = 1-(progress/Max_prog);
+        bugBar.fillAmount = 1-(bug/Max_bug);
+        HPBar.fillAmount = 1-(HP/Max_HP);
     }
 
     // IEnumerator Logging(){
