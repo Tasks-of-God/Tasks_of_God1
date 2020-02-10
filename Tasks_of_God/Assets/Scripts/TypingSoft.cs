@@ -149,7 +149,7 @@ public class TypingSoft : MonoBehaviour
             mode = "work";
         }
 
-        if(progress >= 100)
+        if(progress >= Max_prog)
             SceneManager.LoadScene("ClearScene");
 
         if(HP <= 0){
