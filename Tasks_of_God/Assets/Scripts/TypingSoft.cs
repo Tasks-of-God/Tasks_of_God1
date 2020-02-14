@@ -7,9 +7,13 @@ using UnityEngine.SceneManagement;
 public class TypingSoft : MonoBehaviour
 {
     //　問題の日本語文
-	private string[] qJ  = {"問題", "テスト", "タイピング","神","ゲーム","作業","進歩","締め切り"};
+	private string[] qJ  = {"問題", "テスト", "タイピング","神","ゲーム","作業","進歩","締め切り","もも","あか","夜景","資源",
+                            "お茶","酸素","メガネ","指揮者","コーヒー","たこ焼き","琵琶湖","騎馬戦","台風","梅酒","水彩画",
+                            "日本地図","カツカレー","うどん","腕時計","都道府県","県庁所在地","もんじゃ焼き"};
 	//　問題のローマ字文
-	private string[] qR = {"monndai", "tesuto", "taipinngu","kami","ga-mu","sagyou","sinnpo","simekiri"};
+	private string[] qR = {"monndai", "tesuto", "taipinngu","kami","ga-mu","sagyou","sinnpo","simekiri","momo","aka","yakei","sigen",
+                            "otya","sannso","megane","sikisya","ko-hi-","takoyaki","biwako","kibasen","taifuu","umesyu","suisaiga",
+                            "nihonntizu","katukare-","udonn","udedokei","todoufuken","kenntyousyozaiti","monnjayaki"};
 	//　日本語表示テキスト
 	private Text UIJ;
 	//　ローマ字表示テキスト
@@ -24,6 +28,7 @@ public class TypingSoft : MonoBehaviour
     //　正解した文字列を入れておく
     private string correctString;
 
+    bool[] answeredQ = new bool[100];
 
     //　トータル制限時間
 	private float totalTime;
@@ -60,6 +65,10 @@ public class TypingSoft : MonoBehaviour
     private Image life_1;
     private Image life_2;
 
+    public AudioClip progSound;
+    public AudioClip bugSound;
+    AudioSource audioSource;
+
  
  
 	void Start () {
@@ -73,12 +82,16 @@ public class TypingSoft : MonoBehaviour
         progressBar = GameObject.Find("progressBar").GetComponent<Image>();
         bugBar = GameObject.Find("bugBar").GetComponent<Image>();
         HPBar = GameObject.Find("hpBar").GetComponent<Image>();
+
         //　データ初期化処理
+        for(int n=0; n<qJ.Length; n++){
+            answeredQ[n] = false;
+        }
+
+        num = Random.Range(0, qJ.Length);
+        answeredQ[num] = true;
 
 
-
-		//　問題数内でランダムに選ぶ
-		num = Random.Range(0, qJ.Length);
  
 		//　選択した問題をテキストUIにセット
 		nQJ = qJ[num];
@@ -104,14 +117,25 @@ public class TypingSoft : MonoBehaviour
         life_1 = GameObject.Find("Life_1").GetComponent<Image>();
         life_2 = GameObject.Find("Life_2").GetComponent<Image>();
 
-        life_1.gameObject.SetActive(false);
-        life_2.gameObject.SetActive(false);
+        audioSource = GetComponent<AudioSource>();
+
     }
 	
 
     void OutputQ() {
 	//　問題数内でランダムに選ぶ
-        num = Random.Range(0, qJ.Length);
+        int count = 0;
+        do{
+            if(count>=qJ.Length){
+                for(int n=0; n<qJ.Length; n++){
+                    answeredQ[n] = false;
+                }
+            }
+            //　問題数内でランダムに選ぶ
+            num = Random.Range(0, qJ.Length);
+            count++;
+        }while(answeredQ[num]);
+        answeredQ[num] = true;
     
         //　選択した問題をテキストUIにセット
         nQJ = qJ[num];
@@ -155,9 +179,9 @@ public class TypingSoft : MonoBehaviour
         if(HP <= 0){
             life -= 1;
             if(life == 2){
-                life_1.gameObject.SetActive(true);
+                life_1.gameObject.SetActive(false);
             }else if(life == 1){
-                life_2.gameObject.SetActive(true);
+                life_2.gameObject.SetActive(false);
             }else{
                 SceneManager.LoadScene("GameOverScene");
             }
@@ -179,17 +203,17 @@ public class TypingSoft : MonoBehaviour
         if(index >= nQR.Length) {
             if(mode == "work"){
                 progress += 1;
+                audioSource.PlayOneShot(progSound);
             }else if(mode == "debug"){
                 bug -= (float)Max_bug*0.2f;
                 if(bug > Max_bug) bug = Max_bug;
             }
-            progressBar.fillAmount = 1-(progress/Max_prog);
 
             correctString = "";
             index = 0;
             OutputQ();
         }
-        Debug.Log("正解");
+
 
 
     }
@@ -197,10 +221,10 @@ public class TypingSoft : MonoBehaviour
     //　タイピング失敗時の処理
     void Mistake() {
         HP -= 1;
-        HPBar.fillAmount = 1 - (HP/Max_HP);
+        HPBar.fillAmount = HP/Max_HP;
 
         bug += 1;
-        bugBar.fillAmount = 1-(bug/Max_bug);
+        audioSource.PlayOneShot(bugSound);
     }
 
     //　正解率の計算処理
@@ -216,36 +240,51 @@ public class TypingSoft : MonoBehaviour
 		//　一旦トータルの制限時間を計測；
 		totalTime = hour * 3600 + minute * 60 + seconds;
 		totalTime -= Time.deltaTime * 12;
-        Debug.Log(totalTime);
         HP -= Time.deltaTime;
  
 		//　再設定
         hour = (int) totalTime / 3600;
-        Debug.Log("hour: " + hour);
 		minute = (int) ((int)(totalTime- hour * 3600) / 60) ;
-        Debug.Log("minute: " + minute);
 		seconds = totalTime - hour * 3600 - minute * 60;
-        Debug.Log("seconds: " + seconds);
 		//　タイマー表示用UIテキストに時間を表示する
 		if((int)seconds != (int)oldSeconds) {
 			timeText.text = "納期まであと... " + hour.ToString("00") + ":" + minute.ToString("00") + ":" + ((int) seconds).ToString("00");
             string testText = hour.ToString("00") + ":"  + minute.ToString("00") + ":" + ((int) seconds).ToString("00");
-            Debug.Log(testText);
 		}
 		oldSeconds = seconds;
-		//　制限時間以下になったらコンソールに『制限時間終了』という文字列を表示する
-		if(totalTime <= 0f) {
-			Debug.Log("制限時間終了");
-		}
+
         
         
     }
 
     void showBar(){
-        progressBar.fillAmount = 1-(progress/Max_prog);
-        bugBar.fillAmount = 1-(bug/Max_bug);
-        HPBar.fillAmount = 1-(HP/Max_HP);
+        
+        HPBar.fillAmount = HP/Max_HP;
+
+        if(progressBar.fillAmount < progress/Max_prog){
+            if((progressBar.fillAmount + Time.deltaTime/5) > Max_prog)
+                progressBar.fillAmount = progress/Max_prog;
+            else
+                progressBar.fillAmount += Time.deltaTime/5;
+        }
+
+        if(bugBar.fillAmount < bug/Max_bug && mode == "work"){
+            if((bugBar.fillAmount + Time.deltaTime/5) > Max_bug)
+                bugBar.fillAmount =Max_bug;
+            else
+                bugBar.fillAmount += Time.deltaTime/5;
+        }else if(bugBar.fillAmount > bug/Max_bug && mode == "debug"){
+
+            if((bugBar.fillAmount - Time.deltaTime) < 0)
+                bugBar.fillAmount = 0;
+            else{
+                bugBar.fillAmount -= Time.deltaTime;
+                            Debug.Log(bugBar.fillAmount);
+            }
+        }
     }
+
+
 
     // IEnumerator Logging(){
     //     while (true) {

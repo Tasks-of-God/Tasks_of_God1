@@ -5,22 +5,25 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
     path: Assets/Scenes/StartScene.unity
     guid: e8fe0f93975fc4f8a839ff753b403ab8
   - enabled: 1
-    path: Assets/Scenes/typingTest2.unity
-    guid: e3eed91ccea02fb49bac67d3ea388dca
+    path: Assets/Scenes/MainScene.unity
+    guid: bf5702dd4ab534334bdbd6430628593b
   - enabled: 1
     path: Assets/Scenes/ClearScene.unity
     guid: ba1ba25def8b24041bb7f13a9c691359
   - enabled: 1
     path: Assets/Scenes/GameOverScene.unity
     guid: 8d8699915fff442e7b3106b6f99ed788
-  - enabled: 1
+  - enabled: 0
+    path: Assets/Scenes/SampleScene.unity
+    guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 0
+    path: Assets/Scenes/typingTest2.unity
+    guid: e3eed91ccea02fb49bac67d3ea388dca
+  - enabled: 0
     path: Assets/Scenes/Miyu.unity
     guid: d2549e61d7c232d41843e36cc1cdca86
   m_configObjects: {}
