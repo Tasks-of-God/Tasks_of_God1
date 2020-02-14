@@ -173,7 +173,7 @@ public class TypingSoft : MonoBehaviour
         CountDown();
         showBar();
 
-        if(bug >= Max_bug){
+        if(bugBar.fillAmount  >= 1){
             mode = "debug";
         }else if(bug == 0 && mode == "debug"){
             mode = "work";
@@ -229,8 +229,9 @@ public class TypingSoft : MonoBehaviour
         HP -= 1;
         HPBar.fillAmount = HP/Max_HP;
 
-        bug += 1;
+        bug = Max_bug;
         audioSource.PlayOneShot(bugSound);
+        showBar();
     }
 
     //　正解率の計算処理
@@ -241,11 +242,12 @@ public class TypingSoft : MonoBehaviour
     void CountDown(){
         //　制限時間が0秒以下なら何もしない
 		if (totalTime <= 0f) {
+            SceneManager.LoadScene("GameOverScene");
 			return;
 		}
 		//　一旦トータルの制限時間を計測；
 		totalTime = hour * 3600 + minute * 60 + seconds;
-		totalTime -= Time.deltaTime * 12;
+		totalTime -= Time.deltaTime * 60;
         HP -= Time.deltaTime;
  
 		//　再設定
@@ -275,10 +277,10 @@ public class TypingSoft : MonoBehaviour
         }
 
         if(bugBar.fillAmount < bug/Max_bug && mode == "work"){
-            if((bugBar.fillAmount + Time.deltaTime/5) > Max_bug)
+            if((bugBar.fillAmount + Time.deltaTime) > Max_bug)
                 bugBar.fillAmount =Max_bug;
             else
-                bugBar.fillAmount += Time.deltaTime/5;
+                bugBar.fillAmount += Time.deltaTime;
         }else if(bugBar.fillAmount > bug/Max_bug && mode == "debug"){
 
             if((bugBar.fillAmount - Time.deltaTime) < 0)
