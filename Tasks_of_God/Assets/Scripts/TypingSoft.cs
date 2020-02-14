@@ -9,11 +9,17 @@ public class TypingSoft : MonoBehaviour
     //　問題の日本語文
 	private string[] qJ  = {"問題", "テスト", "タイピング","神","ゲーム","作業","進歩","締め切り","もも","あか","夜景","資源",
                             "お茶","酸素","メガネ","指揮者","コーヒー","たこ焼き","琵琶湖","騎馬戦","台風","梅酒","水彩画",
-                            "日本地図","カツカレー","うどん","腕時計","都道府県","県庁所在地","もんじゃ焼き"};
+                            "日本地図","カツカレー","うどん","腕時計","都道府県","県庁所在地","もんじゃ焼き","国語辞典","死後現金","美少年",
+                            "ポテトチップス","トランペット","電子辞書","電話","天気予報","支離滅裂","ごめんなさい","回転寿司",
+                            "タイムカード","チョコレート","バウムクーヘン","万葉集","結婚します","どんでん返し","春","夏",
+                            "秋","冬","井戸","月","ネギ","地下","壁","皿","ささみチーズカツ","オムライス","ネギトロ丼"};
 	//　問題のローマ字文
 	private string[] qR = {"monndai", "tesuto", "taipinngu","kami","ga-mu","sagyou","sinnpo","simekiri","momo","aka","yakei","sigen",
                             "otya","sannso","megane","sikisya","ko-hi-","takoyaki","biwako","kibasen","taifuu","umesyu","suisaiga",
-                            "nihonntizu","katukare-","udonn","udedokei","todoufuken","kenntyousyozaiti","monnjayaki"};
+                            "nihonntizu","katukare-","udonn","udedokei","todoufuken","kenntyousyozaiti","monnjayaki","kokugozitenn","sigogennkin",
+                            "bisyounenn","potetotippusu","torannpetto","dennsizisyo","dennwa","tennkiyohou","sirimeturetu","gomennnasai",
+                            "kaitennzusi","taimuka-do","tyokore-to","baumuku-henn","mannyousyuu","kekkonnsimasu","donndenngaesi","haru",
+                            "natu","aki","fuyu","ido","tuki","negi","tika","kabe","sara","sasamiti-zukatu","omuraisu","negitorodonn"};
 	//　日本語表示テキスト
 	private Text UIJ;
 	//　ローマ字表示テキスト
@@ -28,7 +34,7 @@ public class TypingSoft : MonoBehaviour
     //　正解した文字列を入れておく
     private string correctString;
 
-    bool[] answeredQ = new bool[100];
+    bool[] answeredQ = new bool[500];
 
     //　トータル制限時間
 	private float totalTime;
