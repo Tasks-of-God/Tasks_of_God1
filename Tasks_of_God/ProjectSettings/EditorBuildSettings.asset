@@ -26,4 +26,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Miyu.unity
     guid: d2549e61d7c232d41843e36cc1cdca86
+  - enabled: 1
+    path: Assets/Scenes/MainScene2.unity
+    guid: 4d8227dc1359646feb62ac6e4cd7b145
   m_configObjects: {}

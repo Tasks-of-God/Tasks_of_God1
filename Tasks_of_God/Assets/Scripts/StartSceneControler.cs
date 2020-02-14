@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class StartSceneControler : MonoBehaviour
 {
-    string gameSceneName = "MainScene";
+    string gameSceneName = "MainScene2";
     bool gameStart = false;
     private float step_time;    // 経過時間カウント用
     public AudioClip startSound;
